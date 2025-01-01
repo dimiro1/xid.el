@@ -55,5 +55,41 @@
     (should (string= encoded expected))
     (should (string= expected (xid-encode decoded)))))
 
+
+(ert-deftest test-xid-show-components-valid-xid ()
+  "Test xid-show-components with a valid XID."
+  (let ((xid "ctqpmq1m65j1kbd10570"))
+    (should
+     (equal
+      (with-temp-buffer
+        (let ((message-log-max nil)) ;; Suppress logging to *Messages*
+          (xid-show-components xid)
+          (current-message)))
+      "Timestamp: 1735760744\nMachine ID: 0x363166\nProcess ID: 6701\nCounter: 10551630"))))
+
+(ert-deftest test-xid-show-components-invalid-xid ()
+  "Test xid-show-components with an invalid XID."
+  (let ((xid "invalid-xid"))
+    (should
+     (equal
+      (condition-case err
+          (progn
+            (xid-show-components xid)
+            nil) ;; Should not reach here
+        (user-error (cadr err))) ;; Extract the error message
+      "Invalid XID length: expected 20 characters"))))
+
+(ert-deftest test-xid-show-components-at-point-valid-xid ()
+  "Test xid-show-components-at-point with a valid XID at point."
+  (with-temp-buffer
+    (insert "ctqpmq1m65j1kbd10570")
+    (goto-char (point-min))         ;; Place the cursor at the start
+    (should
+     (equal
+      (let ((message-log-max nil)) ;; Suppress logging to *Messages*
+        (xid-show-components-at-point)
+        (current-message))
+      "Timestamp: 1735760744\nMachine ID: 0x363166\nProcess ID: 6701\nCounter: 10551630"))))
+
 (provide 'xid-test)
 ;;; xid-test.el ends here

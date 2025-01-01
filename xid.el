@@ -1,7 +1,7 @@
 ;;; xid.el --- Globally unique ID generator -*- lexical-binding: t -*-
 
 ;; Author: Claudemiro Alves Feitosa Neto
-;; Version: 1.1
+;; Version: 1.2
 ;; Package-Requires: ((emacs "24.1"))
 ;; Keywords: convenience, tools
 ;; URL: https://github.com/dimiro1/xid.el
@@ -183,6 +183,53 @@ Returns a 12-byte string containing the raw XID components."
   "Generate and encode a new XID using current time.
 Returns a 20-character base32 encoded string."
   (xid-encode (xid-generate)))
+
+(defun xid--extract-components (raw-id)
+  "Extract the components from RAW-ID bytes."
+  (let ((timestamp (logior (ash (logand (aref raw-id 0) #xff) 24)
+                           (ash (logand (aref raw-id 1) #xff) 16)
+                           (ash (logand (aref raw-id 2) #xff) 8)
+                           (logand (aref raw-id 3) #xff)))
+
+        (machine-id (list (logand (aref raw-id 4) #xff)
+                          (logand (aref raw-id 5) #xff)
+                          (logand (aref raw-id 6) #xff)))
+
+        (process-id (logior (ash (logand (aref raw-id 7) #xff) 8)
+                            (logand (aref raw-id 8) #xff)))
+
+        (counter (logior (ash (logand (aref raw-id 9) #xff) 16)
+                         (ash (logand (aref raw-id 10) #xff) 8)
+                         (logand (aref raw-id 11) #xff))))
+    (list :timestamp timestamp
+          :machine-id machine-id
+          :process-id process-id
+          :counter counter)))
+
+;;;###autoload
+(defun xid-show-components (xid)
+  "Decode an XID and print its components.
+Argument XID should be a 20-character base32 encoded string."
+  (interactive "sXID: ")
+  (if (= (length xid) xid-encoded-len)
+      (when-let* ((raw-id (xid-decode xid))
+                  (components (xid--extract-components raw-id)))
+        (message "Timestamp: %d\nMachine ID: 0x%s\nProcess ID: %d\nCounter: %d"
+                 (plist-get components :timestamp)
+                 (mapconcat (lambda (byte) (format "%02x" byte))
+                            (plist-get components :machine-id)
+                            "")
+                 (plist-get components :process-id)
+                 (plist-get components :counter)))
+    (user-error "Invalid XID length: expected 20 characters")))
+
+;;;###autoload
+(defun xid-show-components-at-point ()
+  "Decode the XID at point and print its components."
+  (interactive)
+  (let ((xid (thing-at-point 'word t)))
+    (if xid
+	(xid-show-components xid))))
 
 ;;;###autoload
 (defun xid-insert ()
