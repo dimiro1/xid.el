@@ -214,8 +214,8 @@ Argument XID should be a 20-character base32 encoded string."
   (if (= (length xid) xid-encoded-len)
       (when-let* ((raw-id (xid-decode xid))
                   (components (xid--extract-components raw-id)))
-        (message "Timestamp: %d\nMachine ID: 0x%s\nProcess ID: %d\nCounter: %d"
-                 (plist-get components :timestamp)
+        (message "Timestamp: %s\nMachine ID: 0x%s\nProcess ID: %d\nCounter: %d"
+                 (format-time-string "%Y-%m-%dT%H:%M:%S%z" (seconds-to-time (plist-get components :timestamp)))
                  (mapconcat (lambda (byte) (format "%02x" byte))
                             (plist-get components :machine-id)
                             "")

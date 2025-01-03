@@ -65,7 +65,7 @@
         (let ((message-log-max nil)) ;; Suppress logging to *Messages*
           (xid-show-components xid)
           (current-message)))
-      "Timestamp: 1735760744\nMachine ID: 0x363166\nProcess ID: 6701\nCounter: 10551630"))))
+      "Timestamp: 2025-01-01T20:45:44+0100\nMachine ID: 0x363166\nProcess ID: 6701\nCounter: 10551630"))))
 
 (ert-deftest test-xid-show-components-invalid-xid ()
   "Test xid-show-components with an invalid XID."
@@ -89,7 +89,7 @@
       (let ((message-log-max nil)) ;; Suppress logging to *Messages*
         (xid-show-components-at-point)
         (current-message))
-      "Timestamp: 1735760744\nMachine ID: 0x363166\nProcess ID: 6701\nCounter: 10551630"))))
+      "Timestamp: 2025-01-01T20:45:44+0100\nMachine ID: 0x363166\nProcess ID: 6701\nCounter: 10551630"))))
 
 (provide 'xid-test)
 ;;; xid-test.el ends here
