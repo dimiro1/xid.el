@@ -1,7 +1,7 @@
 ;;; xid.el --- Globally unique ID generator -*- lexical-binding: t -*-
 
 ;; Author: Claudemiro Alves Feitosa Neto
-;; Version: 1.3
+;; Version: 1.4
 ;; Package-Requires: ((emacs "24.1"))
 ;; Keywords: convenience, tools
 ;; URL: https://github.com/dimiro1/xid.el
@@ -266,10 +266,12 @@ The XID is generated using the current time."
 
 ;; Add the menu inside the existing "Tools" menu.
 ;; Ensure the "Tools" menu exists before adding to it
-(with-suppressed-warnings ((obsolete lookup-key))
-  (when (lookup-key global-map [menu-bar tools])
-    (easy-menu-add-item nil '("menu-bar" "tools") "--")
-    (easy-menu-add-item nil '("menu-bar" "tools") xid-menu)))
+(let ((tools-menu (lookup-key global-map [menu-bar tools])))
+  (when tools-menu
+    (define-key-after tools-menu [separator]
+      '(menu-item "--"))
+    (define-key-after tools-menu [xid]
+      (cons "XID" xid-menu))))
 
 (provide 'xid)
 ;;; xid.el ends here
