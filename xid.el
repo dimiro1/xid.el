@@ -1,7 +1,7 @@
 ;;; xid.el --- Globally unique ID generator -*- lexical-binding: t -*-
 
 ;; Author: Claudemiro Alves Feitosa Neto
-;; Version: 1.2
+;; Version: 1.3
 ;; Package-Requires: ((emacs "24.1"))
 ;; Keywords: convenience, tools
 ;; URL: https://github.com/dimiro1/xid.el
@@ -246,6 +246,30 @@ The XID is generated using the current time."
   (let ((xid (xid-generate-encoded)))
     (kill-new xid)
     (message "Copied XID to clipboard: %s" xid)))
+
+;; Define a custom menu
+;;;###autoload
+(easy-menu-define xid-menu nil "XID"
+  '("XID"
+    ["Insert at point" xid-insert
+     :active t
+     :help "Insert a new XID at the current cursor position."]
+    ["Copy to clipboard" xid-copy-to-clipboard
+     :active t
+     :help "Generate a new XID and copy it to the clipboard."]
+    ["Show components..." xid-show-components
+     :active t
+     :help "Show the components (timestamp, machine ID, process ID, and counter) of a specified XID."]
+    ["Show components at point" xid-show-components-at-point
+     :active t
+     :help "Show the components (timestamp, machine ID, process ID, and counter) of the XID at the current cursor position."]))
+
+;; Add the menu inside the existing "Tools" menu.
+;; Ensure the "Tools" menu exists before adding to it
+(with-suppressed-warnings ((obsolete lookup-key))
+  (when (lookup-key global-map [menu-bar tools])
+    (easy-menu-add-item nil '("menu-bar" "tools") "--")
+    (easy-menu-add-item nil '("menu-bar" "tools") xid-menu)))
 
 (provide 'xid)
 ;;; xid.el ends here
