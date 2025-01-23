@@ -1,7 +1,7 @@
 ;;; xid.el --- Globally unique ID generator -*- lexical-binding: t -*-
 
 ;; Author: Claudemiro Alves Feitosa Neto
-;; Version: 1.4
+;; Version: 1.5
 ;; Package-Requires: ((emacs "28.1"))
 ;; Keywords: convenience, tools
 ;; URL: https://github.com/dimiro1/xid.el
@@ -208,23 +208,21 @@ Returns a 20-character base32 encoded string."
 
 ;;;###autoload
 (defun xid-show-components (xid)
-  "Decode an XID and print its components.
-Argument XID should be a 20-character base32 encoded string."
-  (interactive "sXID: ")
-  (if (= (length xid) xid-encoded-len)
-      (when-let* ((raw-id (xid-decode xid))
-                  (components (xid--extract-components raw-id))
-                  (msg (format "Timestamp: %s\nMachine ID: 0x%s\nProcess ID: %d\nCounter: %d"
-                               (format-time-string "%Y-%m-%dT%H:%M:%S%z"
-						   (seconds-to-time (plist-get components :timestamp)))
-                               (mapconcat (lambda (byte) (format "%02x" byte))
-					  (plist-get components :machine-id)
-					  "")
-                               (plist-get components :process-id)
-                               (plist-get components :counter))))
-        (message "%s" msg)
-        msg)
-    (user-error "Invalid XID length: expected 20 characters")))
+ "Decode an XID and print its components."
+ (interactive "sXID: ")
+ (if (= (length xid) xid-encoded-len)
+     (when-let* ((raw-id (xid-decode xid))
+                 (components (xid--extract-components raw-id))
+                 (msg (format "Timestamp: %d\nMachine ID: 0x%s\nProcess ID: %d\nCounter: %d"
+                            (plist-get components :timestamp)
+                            (mapconcat (lambda (byte) (format "%02x" byte))
+                                     (plist-get components :machine-id)
+                                     "")
+                            (plist-get components :process-id)
+                            (plist-get components :counter))))
+       (message "%s" msg)
+       msg)
+   (user-error "Invalid XID length: expected 20 characters")))
 
 ;;;###autoload
 (defun xid-show-components-at-point ()
@@ -249,7 +247,6 @@ The XID is generated using the current time."
     (kill-new xid)
     (message "Copied XID to clipboard: %s" xid)))
 
-;; Define a custom menu
 ;;;###autoload
 (easy-menu-define xid-menu nil "XID"
   '("XID"
@@ -267,8 +264,6 @@ The XID is generated using the current time."
      :active t
      :help "Show the components (timestamp, machine ID, process ID, and counter) of the XID at the current cursor position."]))
 
-;; Add the menu inside the existing "Tools" menu.
-;; Ensure the "Tools" menu exists before adding to it
 (let ((tools-menu (lookup-key global-map [menu-bar tools])))
   (when tools-menu
     (define-key-after tools-menu [separator]
