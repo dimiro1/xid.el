@@ -2,7 +2,8 @@ name: Code testing
 
 jobs:
   test:
-    uses: leotaku/elisp-check@master
-    with:
-      check: ert
-      file: xid-test.el
+    steps:
+      - uses: leotaku/elisp-check@master
+        with:
+          check: ert
+          file: xid-test.el
