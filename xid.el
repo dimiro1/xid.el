@@ -2,7 +2,7 @@
 
 ;; Author: Claudemiro Alves Feitosa Neto
 ;; Version: 1.4
-;; Package-Requires: ((emacs "29.1"))
+;; Package-Requires: ((emacs "28.1"))
 ;; Keywords: convenience, tools
 ;; URL: https://github.com/dimiro1/xid.el
 ;; License: MIT
@@ -213,14 +213,17 @@ Argument XID should be a 20-character base32 encoded string."
   (interactive "sXID: ")
   (if (= (length xid) xid-encoded-len)
       (when-let* ((raw-id (xid-decode xid))
-                  (components (xid--extract-components raw-id)))
-        (message "Timestamp: %s\nMachine ID: 0x%s\nProcess ID: %d\nCounter: %d"
-                 (format-time-string "%Y-%m-%dT%H:%M:%S%z" (seconds-to-time (plist-get components :timestamp)))
-                 (mapconcat (lambda (byte) (format "%02x" byte))
-                            (plist-get components :machine-id)
-                            "")
-                 (plist-get components :process-id)
-                 (plist-get components :counter)))
+                  (components (xid--extract-components raw-id))
+                  (msg (format "Timestamp: %s\nMachine ID: 0x%s\nProcess ID: %d\nCounter: %d"
+                               (format-time-string "%Y-%m-%dT%H:%M:%S%z"
+						   (seconds-to-time (plist-get components :timestamp)))
+                               (mapconcat (lambda (byte) (format "%02x" byte))
+					  (plist-get components :machine-id)
+					  "")
+                               (plist-get components :process-id)
+                               (plist-get components :counter))))
+        (message "%s" msg)
+        msg)
     (user-error "Invalid XID length: expected 20 characters")))
 
 ;;;###autoload
