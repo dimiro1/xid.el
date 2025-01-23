@@ -257,7 +257,8 @@ The XID is generated using the current time."
     ["Copy to clipboard" xid-copy-to-clipboard
      :active t
      :help "Generate a new XID and copy it to the clipboard."]
-    ["Show components..." xid-show-components
+    "---"
+    ["Show Components..." xid-show-components
      :active t
      :help "Show the components (timestamp, machine ID, process ID, and counter) of a specified XID."]
     ["Show components at point" xid-show-components-at-point
