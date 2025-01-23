@@ -2,7 +2,7 @@
 
 ;; Author: Claudemiro Alves Feitosa Neto
 ;; Version: 1.4
-;; Package-Requires: ((emacs "27.1"))
+;; Package-Requires: ((emacs "28.1"))
 ;; Keywords: convenience, tools
 ;; URL: https://github.com/dimiro1/xid.el
 ;; License: MIT
