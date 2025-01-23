@@ -1,5 +1,11 @@
 name: Code testing
 
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
 jobs:
   test:
     steps:
