@@ -230,9 +230,8 @@ Argument XID should be a 20-character base32 encoded string."
 (defun xid-show-components-at-point ()
   "Decode the XID at point and print its components."
   (interactive)
-  (let ((xid (thing-at-point 'word t)))
-    (if xid
-	(xid-show-components xid))))
+  (when-let ((xid (thing-at-point 'word t)))
+    (xid-show-components xid)))
 
 ;;;###autoload
 (defun xid-insert ()
