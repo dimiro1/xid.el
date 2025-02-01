@@ -1,7 +1,7 @@
 ;;; xid.el --- Globally unique ID generator -*- lexical-binding: t -*-
 
 ;; Author: Claudemiro Alves Feitosa Neto
-;; Version: 1.5.1
+;; Version: 1.6
 ;; Package-Requires: ((emacs "28.1"))
 ;; Keywords: convenience, tools
 ;; URL: https://github.com/dimiro1/xid.el
