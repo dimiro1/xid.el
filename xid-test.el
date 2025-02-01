@@ -8,7 +8,7 @@
   (dotimes (_ 100)
     (let* ((raw-id (xid-generate))
            (encoded (xid-encode raw-id)))
-      (should (= (length encoded) xid-encoded-len))
+      (should (= (length encoded) xid--encoded-len))
       (should (string-match-p "^[0-9a-v]+$" encoded)))))
 
 (ert-deftest xid-test-known-encoded-string ()
